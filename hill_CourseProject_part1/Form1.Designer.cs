@@ -46,6 +46,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.FindButton = new System.Windows.Forms.Button();
             this.ClearSong = new System.Windows.Forms.Button();
+            this.webViewDisplay = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.playButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.webViewDisplay)).BeginInit();
             this.SuspendLayout();
             // 
             // title
@@ -145,7 +148,7 @@
             this.outputText.Multiline = true;
             this.outputText.Name = "outputText";
             this.outputText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.outputText.Size = new System.Drawing.Size(876, 301);
+            this.outputText.Size = new System.Drawing.Size(483, 301);
             this.outputText.TabIndex = 10;
             // 
             // addButton
@@ -170,8 +173,9 @@
             this.songList.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.songList.Name = "songList";
             this.songList.ScrollAlwaysVisible = true;
-            this.songList.Size = new System.Drawing.Size(876, 304);
+            this.songList.Size = new System.Drawing.Size(483, 279);
             this.songList.TabIndex = 12;
+            this.songList.SelectedIndexChanged += new System.EventHandler(this.songList_SelectedIndexChanged);
             // 
             // allSongsButton
             // 
@@ -187,7 +191,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(861, 20);
+            this.label1.Location = new System.Drawing.Point(698, 29);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(123, 25);
@@ -197,7 +201,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(882, 408);
+            this.label2.Location = new System.Drawing.Point(698, 397);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(99, 25);
@@ -224,11 +228,34 @@
             this.ClearSong.UseVisualStyleBackColor = true;
             this.ClearSong.Click += new System.EventHandler(this.ClearSong_Click);
             // 
+            // webViewDisplay
+            // 
+            this.webViewDisplay.AllowExternalDrop = true;
+            this.webViewDisplay.CreationProperties = null;
+            this.webViewDisplay.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.webViewDisplay.Location = new System.Drawing.Point(1047, 81);
+            this.webViewDisplay.Name = "webViewDisplay";
+            this.webViewDisplay.Size = new System.Drawing.Size(538, 475);
+            this.webViewDisplay.TabIndex = 18;
+            this.webViewDisplay.ZoomFactor = 1D;
+            // 
+            // playButton
+            // 
+            this.playButton.Location = new System.Drawing.Point(1185, 618);
+            this.playButton.Name = "playButton";
+            this.playButton.Size = new System.Drawing.Size(268, 90);
+            this.playButton.TabIndex = 19;
+            this.playButton.Text = "Play";
+            this.playButton.UseVisualStyleBackColor = true;
+            this.playButton.Click += new System.EventHandler(this.playButton_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1444, 828);
+            this.ClientSize = new System.Drawing.Size(1607, 831);
+            this.Controls.Add(this.playButton);
+            this.Controls.Add(this.webViewDisplay);
             this.Controls.Add(this.ClearSong);
             this.Controls.Add(this.FindButton);
             this.Controls.Add(this.label2);
@@ -250,6 +277,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "mainForm";
             this.Text = "Music Video Manager";
+            ((System.ComponentModel.ISupportInitialize)(this.webViewDisplay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,6 +303,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button FindButton;
         private System.Windows.Forms.Button ClearSong;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webViewDisplay;
+        private System.Windows.Forms.Button playButton;
     }
 }
 
