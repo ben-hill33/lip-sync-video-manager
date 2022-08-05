@@ -1,21 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Web.WebView2.Core;
 
 namespace hill_CourseProject_part1
 {
     public partial class mainForm : Form
     {
+        // Makes reuse more efficient for each array.
+        const int SONG_LIMIT = 5;
+
+        // Declare data arrays
+        string[] titleArray = new string[SONG_LIMIT];
+        string[] artistArray = new string[SONG_LIMIT];
+        string[] genreArray = new string[SONG_LIMIT];
+        int[] yearArray = new int[SONG_LIMIT];
+        string[] urlArray = new string[SONG_LIMIT];
+
+        // initialize song count
+        int songCount = 0;
+
         public mainForm()
         {
             InitializeComponent();
         }
+
+        #region HELPER Functions
 
         private bool ValidInput()
         {
@@ -52,8 +62,6 @@ namespace hill_CourseProject_part1
 
         private bool SongInList(string songTitle)
         {
-            // Helper function
-
             bool inList = false;
 
             foreach (var item in songList.Items)
@@ -69,38 +77,57 @@ namespace hill_CourseProject_part1
             return inList;
         }
 
+        private int GetSongIndex(string songTitle)
+        {
+            int songIdx = 0;
+            songIdx = songList.Items.IndexOf(songTitle);
+            return songIdx;
+        }
+
+        #endregion
+
+        #region EVENT Functions
+
         private void AddButton_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder(outputText.Text);
-            string newLine = "\r\n";
 
-            if (ValidInput())
+            if (songCount == SONG_LIMIT)
             {
-                // Add title to the songlist
-                songList.Items.Add(titleText.Text);
-
-                // Builds output text
-                sb.Append(titleText.Text);
-                sb.Append(newLine);
-
-                sb.Append(artistText.Text);
-                sb.Append(newLine);
-
-                sb.Append(genreText.Text);
-                sb.Append(newLine);
-
-                sb.Append(yearText.Text);
-                sb.Append(newLine);
-
-                sb.Append(urlText.Text);
-                sb.Append(newLine);
-
-                // Adds built text to output display text box
-                outputText.Text = sb.ToString();
-
+                MessageBox.Show($"You reached song limit of {SONG_LIMIT}");
             }
-            
-        }
+            else
+            {
+                if (ValidInput())
+                {
+                    StringBuilder sbOutput = new StringBuilder(string.Empty);
+                    string newLine = Environment.NewLine;
+
+                    // Builds output text
+                    sbOutput.Append(titleText.Text + newLine);
+                    sbOutput.Append(artistText.Text + newLine);
+                    sbOutput.Append(genreText.Text + newLine);
+                    sbOutput.Append(yearText.Text + newLine);
+                    sbOutput.Append(urlText.Text + newLine);
+
+                    // Adds built text to output display text box
+                    outputText.Text = sbOutput.ToString();
+
+                    // add user inputs to arrays
+                    songList.Items.Add(titleText.Text);
+
+                    titleArray[songCount] = titleText.Text;
+                    artistArray[songCount] = artistText.Text;
+                    genreArray[songCount] = genreText.Text;
+                    yearArray[songCount] = int.Parse(yearText.Text);
+                    urlArray[songCount] = urlText.Text;
+
+                    // increment songCount
+                    songCount++;
+                }
+            }
+        } // End function AddButton_Click
+
+
 
         private void AllSongsButton_Click(object sender, EventArgs e)
         {
@@ -131,14 +158,78 @@ namespace hill_CourseProject_part1
 
         private void FindButton_Click_1(object sender, EventArgs e)
         {
+            StringBuilder sb = new StringBuilder(outputText.Text);
+            string newLine = "\r\n";
+
+            int songIdx = 0;
+
             if (SongInList(titleText.Text))
             {
-                MessageBox.Show("Song Found!");
+                songIdx = GetSongIndex(titleText.Text);
+                sb.Append(titleText.Text);
+                sb.Append(newLine);
+
+                sb.Append(artistArray[songIdx]);
+                sb.Append(newLine);
+
+                sb.Append(genreArray[songIdx]);
+                sb.Append(newLine);
+
+                sb.Append(yearArray[songIdx]);
+                sb.Append(newLine);
+
+                sb.Append(urlArray[songIdx]);
+                sb.Append(newLine);
+
+                outputText.Text = sb.ToString();
             }
             else
             {
                 MessageBox.Show("Song not in list!");
             }
         }
+
+        private void songList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder(string.Empty);
+            string newLine = "\r\n";
+            int songIdx = -1;
+            songIdx = songList.SelectedIndex;
+
+            sb.Append(titleArray[songIdx]);
+            sb.Append(newLine);
+
+            sb.Append(artistArray[songIdx]);
+            sb.Append(newLine);
+
+            sb.Append(genreArray[songIdx]);
+            sb.Append(newLine);
+
+            sb.Append(yearArray[songIdx].ToString());
+            sb.Append(newLine);
+
+            sb.Append(urlArray[songIdx]);
+            sb.Append(newLine);
+
+            // display in output text
+            outputText.Text = sb.ToString();
+        }
+
+        private void playButton_Click(object sender, EventArgs e)
+        {
+            int songIdx = 0;
+            songIdx = songList.SelectedIndex;
+            try
+            {
+                webViewDisplay.CoreWebView2.Navigate(urlArray[songIdx]);
+            }
+            catch
+            {
+                MessageBox.Show($"This should go to the following URL: {urlArray[songIdx]}");
+            }
+        }
+
+        #endregion EVENT Functions
+
     }
 }
